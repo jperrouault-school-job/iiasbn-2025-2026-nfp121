@@ -17,7 +17,7 @@ public class ReferenceApplication {
 
     public static void demoRef(Personne p) {
         // p.age = 6 ;
-        new Personne();
+        Personne p2 = new Personne();
         // p = new Personne();
         p.age = 6;
 
