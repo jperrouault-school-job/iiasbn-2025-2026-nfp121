@@ -7,7 +7,37 @@ public class OperateurApplication {
         int a = 5;
 
         // decalage();
-        andOr();
+        // andOr();
+        andOrXorNot();
+    }
+
+    public static void andOrXorNot() {
+        int a = 5;  // 101
+        int b = 3;  // 011
+
+        // AND &
+        // Il faut avoir 1 partout pour avoir 1, sinon c'est 0
+        System.out.println(a & b);
+        System.out.println(Integer.toBinaryString(a & b));
+
+        // OR |
+        // 0 et 0 donne 0, sinon c'est 1
+        System.out.println(a | b);
+        System.out.println(Integer.toBinaryString(a | b));
+
+        // XOR ^
+        // 1 et 0 font 1, 0 et 0 font 0, 1 et 1 font 0
+        System.out.println(a ^ b);
+        System.out.println(Integer.toBinaryString(a ^ b));
+
+        // NOT ~
+        // on inverse tous les bits
+        System.out.println(~a);
+        System.out.println(Integer.toBinaryString(~a));
+
+        // On inverse le signe
+        System.out.println(-a);
+        System.out.println(Integer.toBinaryString(-a));
     }
 
     public static void andOr() {
