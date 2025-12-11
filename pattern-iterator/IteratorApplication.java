@@ -2,6 +2,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class IteratorApplication {
+    // Pour voir le Bytecode généré :
+    // > javac IteratorApplication.java
+    // > javap -c IteratorApplication
+
     public static void main(String[] args) {
         List<String> prenoms = List.of("Jérémy", "Marion", "Thomas");
 
@@ -20,6 +24,5 @@ public class IteratorApplication {
         for (var val : prenoms) {
             System.out.println(val);
         }
-
     }
 }
