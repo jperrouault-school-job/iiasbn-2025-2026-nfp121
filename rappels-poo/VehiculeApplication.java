@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Application {
+public class VehiculeApplication {
     public static void main(String[] args) {
         Vehicule voiture = new Voiture();
         Vehicule moto = new Moto();
