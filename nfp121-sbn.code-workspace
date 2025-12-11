@@ -1,7 +1,16 @@
 {
 	"folders": [
 		{
-			"path": "test"
+			"path": "intro-java"
+		},
+		{
+			"path": "java-poo"
+		},
+		{
+			"path": "rappels-poo"
+		},
+		{
+			"path": "exo-bitwise-boolean"
 		}
 	],
 	"settings": {
