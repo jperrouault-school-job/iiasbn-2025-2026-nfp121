@@ -11,6 +11,18 @@
 		},
 		{
 			"path": "exo-bitwise-boolean"
+		},
+		{
+			"path": "pattern-iterator"
+		},
+		{
+			"path": "pattern-singleton"
+		},
+		{
+			"path": "pattern-factory"
+		},
+		{
+			"path": "pattern-builder"
 		}
 	],
 	"settings": {
