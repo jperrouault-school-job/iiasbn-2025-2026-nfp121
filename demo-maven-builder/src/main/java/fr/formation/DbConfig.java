@@ -22,4 +22,14 @@ public class DbConfig {
 
     private int port;
     private String type;
+
+    public static class DbConfigBuilder {
+        public DbConfigBuilder mysql(String host) {
+            this.host = host;
+            this.type = "mysql";
+            this.port = 3306;
+
+            return this;
+        }
+    }
 }
