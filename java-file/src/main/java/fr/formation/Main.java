@@ -1,5 +1,6 @@
 package fr.formation;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,6 +39,22 @@ public class Main {
         try (FileOutputStream fos = new FileOutputStream("lefichier.txt")) {
             // fos.write("Démonstration".getBytes());
             fos.write(65);
+        }
+
+        catch (FileNotFoundException ex) {
+            System.out.println("Fichier introuvable !");
+        }
+
+        catch (IOException ex) {
+            System.out.println("Erreur à la fermeture du fichier ...");
+        }
+
+        try (FileInputStream fis = new FileInputStream("lefichier.txt")) {
+            int val = 0;
+
+            while ((val = fis.read()) != -1) {
+                System.out.println((byte)val);
+            }
         }
 
         catch (FileNotFoundException ex) {
