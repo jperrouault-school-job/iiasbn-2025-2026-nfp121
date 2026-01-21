@@ -23,6 +23,18 @@
 		},
 		{
 			"path": "pattern-builder"
+		},
+		{
+			"path": "java-http"
+		},
+		{
+			"path": "java-file"
+		},
+		{
+			"path": "java-json"
+		},
+		{
+			"path": "java-json-http"
 		}
 	],
 	"settings": {
