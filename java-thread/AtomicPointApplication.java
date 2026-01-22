@@ -1,12 +1,10 @@
-public class PointApplication {
+public class AtomicPointApplication {
     public static void main(String[] args) throws InterruptedException {
-        Point p = new Point();
+        AtomicPoint p = new AtomicPoint();
 
         Runnable task = () -> {
             for (int i = 0; i < 10_000; i++) {
-                synchronized (p) {
-                    p.increment(1, 1);
-                }
+                p.increment(1, 1);
             }
         };
 

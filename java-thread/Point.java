@@ -2,6 +2,7 @@ public class Point {
     private int x;
     private int y;
 
+    // public synchronized void increment(int x, int y) {
     public void increment(int x, int y) {
         this.x += x;
         this.y += y;
