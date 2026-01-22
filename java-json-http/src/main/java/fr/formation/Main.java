@@ -27,8 +27,26 @@ public class Main {
 
             photos.stream()
                 .filter(p -> p.getTitle().length() > 40)
-                .map(Photo::getTitle)
-                .forEach(System.out::println)
+                // .map(Photo::getTitle)
+                .forEach(photo -> {
+                    try {
+                        HttpRequest requestAlbum = HttpRequest.newBuilder()
+                            .GET()
+                            .uri(new URI("https://jsonplaceholder.typicode.com/albums/" + photo.getAlbumId()))
+                            .build()
+                        ;
+
+                        byte[] jsonAlbum = httpClient.send(requestAlbum, BodyHandlers.ofByteArray()).body();
+
+                        Album album = mapper.readValue(jsonAlbum, Album.class);
+
+                        System.out.println(photo.getTitle() + " - " + album.getTitle());
+                    }
+
+                    catch (Exception ex) {
+                        System.out.println("Impossible de récupérer l'album !");
+                    }
+                })
             ;
 
             double moyenne = photos.stream()
