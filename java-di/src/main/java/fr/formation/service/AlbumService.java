@@ -12,6 +12,7 @@ public class AlbumService {
     private PhotoRepository photoRepository;
 
     public void findAll() {
+        this.repository.findAll();
         System.out.println(this.repository + " - " + this.photoRepository);
     }
 }
