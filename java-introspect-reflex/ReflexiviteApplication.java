@@ -1,5 +1,6 @@
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class ReflexiviteApplication {
     public static void main(String[] args) throws Exception {
@@ -19,6 +20,12 @@ public class ReflexiviteApplication {
         fieldTitle.set(laPhoto, "Le nouveau titre");
 
         System.out.println(fieldTitle.get(laPhoto));
+
+        for (Method method : Photo.class.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(DemoAnnotation.class)) {
+                method.invoke(laPhoto);
+            }
+        }
 
     }
 }
