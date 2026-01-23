@@ -11,8 +11,8 @@ public class AlbumService {
     @Inject
     private PhotoRepository photoRepository;
 
-    public void findAll() {
-        this.repository.findAll();
+    public int findAll() {
         System.out.println(this.repository + " - " + this.photoRepository);
+        return this.repository.findAll().size();
     }
 }

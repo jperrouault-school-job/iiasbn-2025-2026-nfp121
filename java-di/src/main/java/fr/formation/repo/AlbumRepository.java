@@ -1,7 +1,10 @@
 package fr.formation.repo;
 
-public class AlbumRepository {
-    public void findAll() {
+import java.util.ArrayList;
+import java.util.List;
 
+public class AlbumRepository {
+    public List<String> findAll() {
+        return new ArrayList<>();
     }
 }

@@ -1,5 +1,8 @@
 package fr.formation.service;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,5 +29,15 @@ class AlbumServiceTest {
         service.findAll();
 
         Mockito.verify(repository).findAll();
+    }
+
+    @Test
+    void shouldFindAllReturnCount() {
+        Mockito.when(this.repository.findAll()).thenReturn(List.of("S1", "S2", "S3"));
+
+        int result = this.service.findAll();
+
+        Assertions.assertEquals(3, result);
+        Mockito.verify(this.repository).findAll();
     }
 }
