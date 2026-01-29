@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.formation.WebApplicationContext;
 
@@ -18,12 +20,19 @@ public class HttpClient {
 
             String line = reader.readLine();
             String path = null;
+            Map<String, String> queryParameters = new HashMap<>();
 
             if (line != null) {
                 String requestTarget = line.split(" ")[1];
                 URI uri = new URI(requestTarget);
 
                 path = uri.getPath();
+
+                for (String queryParam : uri.getQuery().split("&")) {
+                    String[] keyValue = queryParam.split("=");
+
+                    queryParameters.put(keyValue[0], keyValue[1]);
+                }
 
                 System.out.println("Le chemin demandé est : " + path);
             }
@@ -36,7 +45,7 @@ public class HttpClient {
             String result = "not found";
 
             if (webMethod != null) {
-                result = webMethod.invoke().toString();
+                result = webMethod.invoke(queryParameters).toString();
             }
 
             // Envoyer la réponse au client
