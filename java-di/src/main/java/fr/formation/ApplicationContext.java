@@ -5,18 +5,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import fr.formation.annotation.Inject;
 
 public class ApplicationContext {
     private Map<Class<?>, Object> instances = new HashMap<>();
 
-    public ApplicationContext(Class<?>... classes) {
+    public ApplicationContext(String packageName) {
         // Auto-référence
         this.instances.put(ApplicationContext.class, this);
 
-        this.findAllClassesByPackage("fr.formation");
+        Set<Class<?>> classes = this.findAllClassesByPackage(packageName);
 
         // Gestion des instances
         for (Class<?> clz : classes) {
@@ -33,23 +35,32 @@ public class ApplicationContext {
         return (T) this.instances.get(clz);
     }
 
-    private void findAllClassesByPackage(String packageName) {
+    private Set<Class<?>> findAllClassesByPackage(String packageName) {
         InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(packageName.replace(".", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        Set<Class<?>> classes = new HashSet<>();
 
         for (String line : reader.lines().toList()) {
             if (line.endsWith(".class")) {
                 String className = packageName + "." + line.substring(0, line.length() - 6);
                 System.out.println("Classe trouvée : " + className);
 
-                // Class.forName(className);
+                try {
+                    classes.add(Class.forName(className));
+                }
+
+                catch (ClassNotFoundException e) {
+                    System.out.println("Impossible de charger la classe !");
+                }
 
             }
 
             else {
-                this.findAllClassesByPackage(packageName + "." + line);
+                classes.addAll(this.findAllClassesByPackage(packageName + "." + line));
             }
         }
+
+        return classes;
     }
 
     private void inject(Class<?> clz) {
