@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import fr.formation.annotation.Component;
 import fr.formation.annotation.Inject;
 
 public class ApplicationContext {
@@ -22,7 +23,9 @@ public class ApplicationContext {
 
         // Gestion des instances
         for (Class<?> clz : classes) {
-            this.instances.put(clz, BeanFactory.createBean(clz));
+            if (clz.isAnnotationPresent(Component.class)) {
+                this.instances.put(clz, BeanFactory.createBean(clz));
+            }
         }
 
         // Injection des dépendances
