@@ -10,20 +10,21 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.formation.annotation.Component;
+import fr.formation.annotation.Controller;
 import fr.formation.annotation.Inject;
 
 public class ApplicationContext {
-    private Map<Class<?>, Object> instances = new HashMap<>();
+    protected Map<Class<?>, Object> instances = new HashMap<>();
 
     public ApplicationContext(String packageName) {
         // Auto-référence
-        this.instances.put(ApplicationContext.class, this);
+        this.instances.put(this.getClass(), this);
 
         Set<Class<?>> classes = this.findAllClassesByPackage(packageName);
 
         // Gestion des instances
         for (Class<?> clz : classes) {
-            if (clz.isAnnotationPresent(Component.class)) {
+            if (clz.isAnnotationPresent(Component.class) || clz.isAnnotationPresent(Controller.class)) {
                 this.instances.put(clz, BeanFactory.createBean(clz));
             }
         }
