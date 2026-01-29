@@ -7,6 +7,15 @@ import fr.formation.service.PhotoService;
 
 public class Main {
     public static void main(String[] args) {
+
+        try {
+            Class.forName("fr.formation.repo.AlbumRepository");
+        }
+
+        catch (ClassNotFoundException e) {
+            System.out.println("La classe n'existe pas !");
+        }
+
         // PhotoService photoService = BeanFactory.createBean(PhotoService.class);
         // AlbumService albumService = BeanFactory.createBean(AlbumService.class);
         // PhotoRepository photoRepository = BeanFactory.createBean(PhotoRepository.class);
@@ -19,15 +28,15 @@ public class Main {
             AlbumRepository.class
         );
 
-        PhotoService photoService = ctx.getBean(PhotoService.class);
-        AlbumService albumService = ctx.getBean(AlbumService.class);
+        // PhotoService photoService = ctx.getBean(PhotoService.class);
+        // AlbumService albumService = ctx.getBean(AlbumService.class);
 
-        System.out.println(photoService);
-        System.out.println(albumService);
-        // System.out.println(photoRepository);
-        // System.out.println(albumRepository);
+        // System.out.println(photoService);
+        // System.out.println(albumService);
+        // // System.out.println(photoRepository);
+        // // System.out.println(albumRepository);
 
-        photoService.findAll();
-        albumService.findAll();
+        // photoService.findAll();
+        // albumService.findAll();
     }
 }
