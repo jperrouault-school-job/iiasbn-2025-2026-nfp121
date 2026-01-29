@@ -35,6 +35,39 @@
 		},
 		{
 			"path": "java-json-http"
+		},
+		{
+			"path": "java-json-http-proxy"
+		},
+		{
+			"path": "java-socket"
+		},
+		{
+			"path": "exo-socket-fichier"
+		},
+		{
+			"path": "java-thread"
+		},
+		{
+			"path": "exo-socket-thread-fichier"
+		},
+		{
+			"path": "java-test-junit"
+		},
+		{
+			"path": "java-introspect-reflex"
+		},
+		{
+			"path": "exo-scheduled"
+		},
+		{
+			"path": "java-di"
+		},
+		{
+			"path": "java-http-server"
+		},
+		{
+			"path": "java-web-di"
 		}
 	],
 	"settings": {

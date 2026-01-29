@@ -21,8 +21,11 @@ public class WebMethod {
             int i = 0;
 
             for (Parameter param : this.method.getParameters()) {
-                if (param.isAnnotationPresent(RequestParam.class)) {
-                    parameterValues[i] = queryParameters.get(param.getName());
+                RequestParam requestParamAnnotation = param.getDeclaredAnnotation(RequestParam.class);
+
+                if (requestParamAnnotation != null) {
+                    String paramName = requestParamAnnotation.value().isBlank() ? param.getName() : requestParamAnnotation.value();
+                    parameterValues[i] = queryParameters.get(paramName);
 
                     if (param.getType() == Integer.class) {
                         parameterValues[i] = Integer.parseInt((String)parameterValues[i]);

@@ -7,7 +7,7 @@ import fr.formation.annotation.RequestParam;
 @Controller
 public class DemoController {
     @GetMapping("/demo")
-    public String demo(@RequestParam String username, @RequestParam Integer id) {
+    public String demo(@RequestParam("username") String username, @RequestParam("id") Integer id) {
         return "Coucou " + username + " id = " + (id * 2);
     }
 }
