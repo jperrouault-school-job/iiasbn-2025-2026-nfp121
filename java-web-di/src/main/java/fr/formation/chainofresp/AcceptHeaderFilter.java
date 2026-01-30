@@ -17,7 +17,7 @@ public class AcceptHeaderFilter extends HttpFilter {
     public void handle(HttpRequest request, HttpResponse response) {
         log.debug("Analyse du type de flux demandé dans la requete HTTP ...");
 
-        HttpContentType contentType = this.retreiveContentType(request.getHeader("Accept"));
+        HttpContentType contentType = this.parseContentType(request.getHeader("Accept"));
 
         log.debug("Flux demandé = {}", contentType);
 
@@ -33,7 +33,7 @@ public class AcceptHeaderFilter extends HttpFilter {
         this.doNext(request, response);
     }
 
-    private HttpContentType retreiveContentType(String accept) {
+    private HttpContentType parseContentType(String accept) {
         if ("application/json".equals(accept)) {
             return HttpContentType.APPLICATION_JSON;
         }
