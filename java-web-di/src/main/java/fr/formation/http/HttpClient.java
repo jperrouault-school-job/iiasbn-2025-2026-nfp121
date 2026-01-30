@@ -11,9 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.formation.WebApplicationContext;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class HttpClient {
     public void handle(WebApplicationContext ctx, Socket client) {
+        log.debug("Traitement de la requête HTTP ...");
+
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
@@ -28,17 +32,19 @@ public class HttpClient {
 
                 path = uri.getPath();
 
-                for (String queryParam : uri.getQuery().split("&")) {
-                    String[] keyValue = queryParam.split("=");
+                if (uri.getQuery() != null) {
+                    for (String queryParam : uri.getQuery().split("&")) {
+                        String[] keyValue = queryParam.split("=");
 
-                    queryParameters.put(keyValue[0], keyValue[1]);
+                        queryParameters.put(keyValue[0], keyValue[1]);
+                    }
                 }
 
-                System.out.println("Le chemin demandé est : " + path);
+                log.debug("Le chemin demandé est : {}", path);
             }
 
             if (path == null) {
-                System.out.println("PATH NULL");
+                log.error("Le chemin n'a pas été trouvé !");
             }
 
             WebMethod webMethod = ctx.getMethods().get(path);
@@ -69,11 +75,13 @@ public class HttpClient {
 
             writer.flush();
 
+            log.debug("Fin de la connexion avec le client");
+
             client.close();
         }
 
         catch (Exception e) {
-            e.printStackTrace();
+            log.error("Une erreur est survenue pendant la communication avec le client : {}", e.getMessage());
         }
     }
 }

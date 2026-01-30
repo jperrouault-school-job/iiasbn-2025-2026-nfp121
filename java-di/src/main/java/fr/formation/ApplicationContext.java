@@ -12,7 +12,9 @@ import java.util.Set;
 import fr.formation.annotation.Component;
 import fr.formation.annotation.Controller;
 import fr.formation.annotation.Inject;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class ApplicationContext {
     protected Map<Class<?>, Object> instances = new HashMap<>();
 
@@ -47,14 +49,14 @@ public class ApplicationContext {
         for (String line : reader.lines().toList()) {
             if (line.endsWith(".class")) {
                 String className = packageName + "." + line.substring(0, line.length() - 6);
-                System.out.println("Classe trouvée : " + className);
+                log.debug("Classe trouvée : {} !", className);
 
                 try {
                     classes.add(Class.forName(className));
                 }
 
                 catch (ClassNotFoundException e) {
-                    System.out.println("Impossible de charger la classe !");
+                    log.error("Impossible de charger la classe {} : {}", className, e.getMessage());
                 }
 
             }
@@ -82,7 +84,7 @@ public class ApplicationContext {
                     }
 
                     catch (Exception e) {
-                        System.out.println("Problème à l'injection : " + e.getMessage());
+                        log.error("Problème à l'injection : {} ", e.getMessage());
                     }
                 }
             }
