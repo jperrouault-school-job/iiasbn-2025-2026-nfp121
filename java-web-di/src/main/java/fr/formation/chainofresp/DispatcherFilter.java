@@ -25,19 +25,8 @@ public class DispatcherFilter extends HttpFilter {
         response.setContentType(HttpContentType.TEXT_HTML);
 
         if (webMethod != null) {
-            String result = webMethod.invoke(request, response).toString();
-
-            if (!result.isEmpty()) {
-                response.setStatus(HttpResponseStatus.OK);
-
-                response.write("""
-                <!DOCTYPE>
-                <html>
-                <body>
-                    %s
-                </body>
-                </html>""".formatted(result));
-            }
+            webMethod.invoke(request, response);
+            response.setStatus(HttpResponseStatus.OK);
         }
 
         else {

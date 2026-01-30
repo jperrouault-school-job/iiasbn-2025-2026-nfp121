@@ -13,13 +13,7 @@ public class PhotoController {
     private PhotoService service;
 
     @GetMapping("/photo")
-    public String findById(@RequestParam("id") Integer id) {
-        Photo photo = this.service.findById(id);
-
-        if (photo != null) {
-            return this.service.findById(id).getTitle();
-        }
-
-        return "";
+    public Photo findById(@RequestParam("id") Integer id) {
+        return this.service.findById(id);
     }
 }

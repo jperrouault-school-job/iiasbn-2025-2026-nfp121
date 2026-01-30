@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import fr.formation.WebApplicationContext;
 import fr.formation.annotation.Component;
 import fr.formation.annotation.Inject;
+import fr.formation.chainofresp.AcceptHeaderFilter;
 import fr.formation.chainofresp.AuthenticationFilter;
 import fr.formation.chainofresp.DispatcherFilter;
 import fr.formation.chainofresp.ExceptionHandleFilter;
@@ -36,6 +37,7 @@ public class HttpServer {
             .setNext(this.ctx.getBean(AuthenticationFilter.class))
             .setNext(this.ctx.getBean(DispatcherFilter.class))
             .setNext(this.ctx.getBean(ExceptionHandleFilter.class))
+            .setNext(this.ctx.getBean(AcceptHeaderFilter.class))
         ;
 
         try (ServerSocket server = new ServerSocket(SERVER_PORT)) {

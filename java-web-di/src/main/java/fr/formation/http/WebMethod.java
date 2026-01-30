@@ -36,7 +36,11 @@ public class WebMethod {
                 i++;
             }
 
-            return this.method.invoke(this.instance, parameterValues);
+            Object result = this.method.invoke(this.instance, parameterValues);
+
+            response.setRawContent(result);
+
+            return result;
         }
 
         catch (Exception e) {
