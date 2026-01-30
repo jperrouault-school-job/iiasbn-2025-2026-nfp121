@@ -1,78 +1,84 @@
 package fr.formation.http;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
-import fr.formation.WebApplicationContext;
+import fr.formation.chainofresp.HttpFilter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class HttpClient {
-    public void handle(WebApplicationContext ctx, Socket client) {
-        log.debug("Traitement de la requête HTTP ...");
+    public void handle(HttpFilter filerChain, Socket client) {
+        log.debug("Parsing de la requête HTTP ...");
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            HttpRequest request = new HttpRequest();
+            HttpResponse response = new HttpResponse();
+            InputStream is = client.getInputStream();
+            ByteArrayOutputStream linesBuffer = new ByteArrayOutputStream();
 
-            String line = reader.readLine();
-            String path = null;
-            Map<String, String> queryParameters = new HashMap<>();
+            int value;
 
-            if (line != null) {
-                String requestTarget = line.split(" ")[1];
-                URI uri = new URI(requestTarget);
+            while ((value = is.read()) != -1) {
+                linesBuffer.write(value);
 
-                path = uri.getPath();
+                if (linesBuffer.toString().endsWith("\r\n\r\n")) {
+                    break;
+                }
+            }
 
-                if (uri.getQuery() != null) {
-                    for (String queryParam : uri.getQuery().split("&")) {
-                        String[] keyValue = queryParam.split("=");
+            String lines = linesBuffer.toString(StandardCharsets.US_ASCII);
 
-                        queryParameters.put(keyValue[0], keyValue[1]);
-                    }
+            for (String line : lines.split("\r\n")) {
+                request.getLines().add(line);
+
+                if (!line.startsWith("Content-Length:")) {
+                    continue;
                 }
 
-                log.debug("Le chemin demandé est : {}", path);
+                int contentLength = Integer.parseInt(line.substring(15).trim());
+
+                byte[] body = new byte[contentLength];
+                int totalRead = 0;
+
+                while (totalRead < contentLength) {
+                    int read = is.read(body, totalRead, contentLength - totalRead);
+
+                    if (read == -1) {
+                        throw new IOException();
+                    }
+
+                    totalRead += read;
+                }
+
+                request.setBody(body);
             }
 
-            if (path == null) {
-                log.error("Le chemin n'a pas été trouvé !");
-            }
+            filerChain.handle(request, response);
 
-            WebMethod webMethod = ctx.getMethods().get(path);
-            String result = "not found";
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            byte[] responseBodyBytes = response.getContent() != null ? response.getContent().getBytes(StandardCharsets.UTF_8) : new byte[0];
 
-            if (webMethod != null) {
-                result = webMethod.invoke(queryParameters).toString();
-            }
+            log.debug("Préparation et envoie de la réponse HTTP ...");
+            StringBuilder responseBuilder = new StringBuilder("HTTP/1.1 ");
 
-            // Envoyer la réponse au client
-            String responseBody = """
-            <!DOCTYPE>
-            <html>
-            <body>
-                {content}
-            </body>
-            </html>
-            """.replace("{content}", result);
+            responseBuilder.append(response.getStatus().getCode());
+            responseBuilder.append(" ");
+            responseBuilder.append(response.getStatus().name());
+            responseBuilder.append("\r\n");
 
-            byte[] responseBodyBytes = responseBody.getBytes(StandardCharsets.UTF_8);
+            responseBuilder.append("Content-Type: " + response.getContentType().getValue() + "; charset=UTF-8\r\n");
+            responseBuilder.append("Content-Length: " + responseBodyBytes.length + "\r\n");
+            responseBuilder.append("Connection: close\r\n");
+            responseBuilder.append("\r\n");
+            responseBuilder.append(response.getContent() != null ? response.getContent() : "");
 
-            writer.write("HTTP/1.1 200 OK\r\n");
-            writer.write("Content-Type: text/html; charset=UTF-8\r\n");
-            writer.write("Content-Length: " + responseBodyBytes.length + "\r\n");
-            writer.write("Connection: close\r\n");
-            writer.write("\r\n");
-            writer.write(responseBody);
-
+            writer.write(responseBuilder.toString());
             writer.flush();
 
             log.debug("Fin de la connexion avec le client");

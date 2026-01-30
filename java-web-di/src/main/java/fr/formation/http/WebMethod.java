@@ -2,20 +2,21 @@ package fr.formation.http;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Map;
 
 import fr.formation.annotation.RequestParam;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 @Getter @Setter
 @Builder
+@Log4j2
 public class WebMethod {
     private Object instance;
     private Method method;
 
-    public Object invoke(Map<String, String> queryParameters) {
+    public Object invoke(HttpRequest request, HttpResponse response) {
         try {
             Object[] parameterValues = new Object[this.method.getParameterCount()];
             int i = 0;
@@ -25,7 +26,7 @@ public class WebMethod {
 
                 if (requestParamAnnotation != null) {
                     String paramName = requestParamAnnotation.value().isBlank() ? param.getName() : requestParamAnnotation.value();
-                    parameterValues[i] = queryParameters.get(paramName);
+                    parameterValues[i] = request.getParameter(paramName);
 
                     if (param.getType() == Integer.class) {
                         parameterValues[i] = Integer.parseInt((String)parameterValues[i]);
@@ -39,8 +40,15 @@ public class WebMethod {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            log.error("Une erreur est survenue pendant l'invocation de la méthode {} : {}", this.method.getName(), e.getMessage());
+
+            response.setHttpException(HttpException.builder()
+                .cause(e)
+                .message(e.getMessage())
+                .build()
+            );
+
+            return "";
         }
     }
 }

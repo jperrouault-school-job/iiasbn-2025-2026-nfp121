@@ -49,7 +49,7 @@ public class ApplicationContext {
         for (String line : reader.lines().toList()) {
             if (line.endsWith(".class")) {
                 String className = packageName + "." + line.substring(0, line.length() - 6);
-                log.debug("Classe trouvée : {} !", className);
+                log.trace("Classe trouvée : {} !", className);
 
                 try {
                     classes.add(Class.forName(className));
