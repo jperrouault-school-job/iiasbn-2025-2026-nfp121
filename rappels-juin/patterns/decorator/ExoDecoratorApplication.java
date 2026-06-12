@@ -5,5 +5,7 @@ public class ExoDecoratorApplication {
         PrenomService service = ServiceFactory.createPrenomService();
 
         service.findAll();
+        service.findAll();
+        service.findAll();
     }
 }

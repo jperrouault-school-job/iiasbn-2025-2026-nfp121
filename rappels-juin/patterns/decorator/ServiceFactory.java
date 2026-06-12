@@ -7,6 +7,7 @@ public class ServiceFactory {
         PrenomService service = new PrenomService();
 
         service = new TransactionDecorator(service);
+        service = new CachePrenomServiceProxy(service);
         service = new JournalDecorator(service);
 
         return service;
